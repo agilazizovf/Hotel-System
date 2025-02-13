@@ -6,3 +6,9 @@ Hotel Reservation System:
 5) Payment
 6) Review
 7) Notification
+
+
+Functions:
+1) Admin register and login +
+2) Admin hotel emeliyyatlarini yerine yetirecek -
+3) Admin room emeliyyatlarini yerine yetirecek -

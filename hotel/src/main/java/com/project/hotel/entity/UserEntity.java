@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,10 @@ public class UserEntity {
     @JsonIgnore
     @OneToOne(mappedBy = "user")
     private AdminEntity admin;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<HotelEntity> hotels;
 
 
     @JsonIgnore
