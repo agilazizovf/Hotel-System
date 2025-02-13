@@ -22,7 +22,12 @@ public class UserEntity {
 
     private String email;
 
+    @JsonIgnore
     private String password;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private AdminEntity admin;
 
 
     @JsonIgnore
