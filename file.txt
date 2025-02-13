@@ -1,0 +1,8 @@
+Hotel Reservation System:
+1) User -> Admin, Customer, Employee
+2) Hotel
+3) Room
+4) Reservation
+5) Payment
+6) Review
+7) Notification
