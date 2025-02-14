@@ -13,7 +13,6 @@ public class HotelInfoResponse {
     private double rating; // Needs calculation
     private String description;
     private Integer numberOfRooms; // Needs calculation
-    private double pricePerNight;
     private int availableRooms; // Needs calculation or something else
     private boolean hasPool;
     private boolean hasGym;

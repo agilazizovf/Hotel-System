@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "hotels")
@@ -24,7 +25,6 @@ public class HotelEntity {
     private double rating; // Needs calculation
     private String description;
     private Integer numberOfRooms; // Needs calculation
-    private double pricePerNight;
     private int availableRooms; // Needs calculation or something else
     private boolean hasPool;
     private boolean hasGym;
@@ -46,5 +46,8 @@ public class HotelEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomEntity> rooms;
 
 }

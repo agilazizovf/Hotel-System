@@ -13,7 +13,6 @@ public class HotelMapper {
         response.setRating(hotel.getRating());
         response.setDescription(hotel.getDescription());
         response.setNumberOfRooms(hotel.getNumberOfRooms());
-        response.setPricePerNight(hotel.getPricePerNight());
         response.setAvailableRooms(hotel.getAvailableRooms());
         response.setHasPool(hotel.isHasPool());
         response.setHasGym(hotel.isHasGym());

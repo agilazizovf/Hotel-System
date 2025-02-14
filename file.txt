@@ -1,6 +1,6 @@
 Hotel Reservation System:
-1) User -> Admin, Customer, Employee
-2) Hotel
+1) User -> Admin+, Customer, Employee
+2) Hotel+
 3) Room
 4) Reservation
 5) Payment
@@ -12,3 +12,27 @@ Functions:
 1) Admin register and login +
 2) Admin hotel emeliyyatlarini yerine yetirecek -
 3) Admin room emeliyyatlarini yerine yetirecek -
+
+
+
+
+{
+  "name": "Baku Marriot Hotel Boulevard",
+  "location": "Baku Boulevard",
+  "description": "The best hotel with amazing view",
+  "pricePerNight": 100,
+  "hasPool": true,
+  "hasGym": true,
+  "hasWiFi": true,
+  "hasRestaurant": true,
+  "hasParking": false,
+  "hasSpa": true,
+  "contactNumber": "+994556789090",
+  "email": "bakumarriothotel@gmail.com",
+  "website": "http://bakumarriothotel.com",
+  "checkInTime": "14:00:00",
+  "checkOutTime": "02:00:00",
+  "city": "Baku",
+  "state": "-",
+  "country": "Azerbaijan"
+}

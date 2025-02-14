@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/hotels")
 @RequiredArgsConstructor
@@ -26,6 +28,11 @@ public class HotelController {
     public PageResponse<HotelInfoResponse> getAllHotels(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size) {
         return hotelService.findAllHotels(page, size);
+    }
+
+    @GetMapping("/search-by-name")
+    public List<HotelInfoResponse> findHotelByName(@RequestParam(name = "search") String name) {
+        return hotelService.findHotelByName(name);
     }
 
     @GetMapping("/{hotelId}")

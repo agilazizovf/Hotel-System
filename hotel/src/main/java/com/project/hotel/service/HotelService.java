@@ -13,6 +13,7 @@ public interface HotelService {
 
     ResponseEntity<HotelResponse> create(HotelRequest request);
     PageResponse<HotelInfoResponse> findAllHotels(int page, int size);
+    List<HotelInfoResponse> findHotelByName(String name);
     ResponseEntity<HotelInfoResponse> findHotelById(Long hotelId);
     ResponseEntity<HotelResponse> update(Long hotelId, HotelRequest request);
     void delete(Long hotelId);

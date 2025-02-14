@@ -75,7 +75,8 @@ public class SecurityConfiguration {
             "/swagger-ui.html",
             "/api/auth/**",
             "/api/admins/**",
-            "/api/hotels/**"
+            "/api/hotels/**",
+            "/api/rooms/**"
     };
 
     static String[] adminUrls = {

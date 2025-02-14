@@ -34,6 +34,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<HotelEntity> hotels;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<RoomEntity> rooms;
+
 
     @JsonIgnore
     @ManyToMany

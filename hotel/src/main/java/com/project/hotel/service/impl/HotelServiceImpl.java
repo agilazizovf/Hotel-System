@@ -69,6 +69,21 @@ public class HotelServiceImpl implements HotelService {
         return pageResponse;
     }
 
+    @Override
+    public List<HotelInfoResponse> findHotelByName(String name) {
+        List<HotelEntity> hotels = hotelRepository.findHotelByNameContainingIgnoreCase(name);
+        List<HotelInfoResponse> responses = hotels
+                .stream()
+                .map(hotel -> {
+                    HotelInfoResponse response = new HotelInfoResponse();
+                    mapper.map(hotel, response);
+                    return response;
+                })
+                .toList();
+
+        return responses;
+    }
+
     private static PageResponse<HotelInfoResponse> getHotelInfoResponsePageResponse(List<HotelInfoResponse> responses, Page<HotelEntity> hotelEntities) {
         PageResponse<HotelInfoResponse> pageResponse = new PageResponse<>();
         pageResponse.setContent(responses);
