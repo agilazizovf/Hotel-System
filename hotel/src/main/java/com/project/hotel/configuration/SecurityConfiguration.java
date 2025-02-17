@@ -1,7 +1,7 @@
 package com.project.hotel.configuration;
 
 import com.project.hotel.filter.JwtAuthorizationFilter;
-import com.project.hotel.service.CustomUserDetailsService;
+import com.project.hotel.service.impl.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                         authorize -> authorize
                                 .requestMatchers(permitAllUrls).permitAll()
                                 .requestMatchers(adminUrls).hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers(clientUrls).hasAnyAuthority("ROLE_USER")
+                                .requestMatchers(clientUrls).hasAnyAuthority("ROLE_CUSTOMER")
                                 .requestMatchers(anyAuthUrls).authenticated()
 //                                .anyRequest().authenticated()
                 ).exceptionHandling(exceptionHandling -> exceptionHandling
@@ -76,7 +76,10 @@ public class SecurityConfiguration {
             "/api/auth/**",
             "/api/admins/**",
             "/api/hotels/**",
-            "/api/rooms/**"
+            "/api/rooms/**",
+            "/api/customers/**",
+            "/api/reservations/**",
+            "/api/payments/**"
     };
 
     static String[] adminUrls = {

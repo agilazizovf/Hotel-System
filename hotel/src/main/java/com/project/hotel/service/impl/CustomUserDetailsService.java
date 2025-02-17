@@ -1,4 +1,4 @@
-package com.project.hotel.service;
+package com.project.hotel.service.impl;
 
 import com.project.hotel.entity.AuthorityEntity;
 import com.project.hotel.entity.UserEntity;

@@ -31,8 +31,16 @@ public class UserEntity {
     private AdminEntity admin;
 
     @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private CustomerEntity customer;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<HotelEntity> hotels;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<ReservationEntity> reservations;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

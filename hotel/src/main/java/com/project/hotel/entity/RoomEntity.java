@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "rooms")
 @Data
@@ -36,4 +38,7 @@ public class RoomEntity {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private HotelEntity hotel;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservationEntity> reservations;
 }
