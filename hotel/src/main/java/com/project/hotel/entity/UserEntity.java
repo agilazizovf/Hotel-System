@@ -3,6 +3,7 @@ package com.project.hotel.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserEntity {
 
     @Id
@@ -39,6 +41,10 @@ public class UserEntity {
     private List<HotelEntity> hotels;
 
     @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private ReviewEntity review;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<ReservationEntity> reservations;
 
@@ -47,14 +53,9 @@ public class UserEntity {
     private List<RoomEntity> rooms;
 
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "user_authorities",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
-    private Set<AuthorityEntity> authorities = new HashSet<>();
-
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleEntity> roles;
 
     public UserEntity(String username, String password) {
         this.email = username;

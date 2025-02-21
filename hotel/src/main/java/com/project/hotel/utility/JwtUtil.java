@@ -1,6 +1,6 @@
 package com.project.hotel.utility;
 
-import com.project.hotel.entity.AuthorityEntity;
+import com.project.hotel.entity.RoleEntity;
 import com.project.hotel.entity.UserEntity;
 import com.project.hotel.repository.UserRepository;
 import io.jsonwebtoken.*;
@@ -14,9 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
-import javax.naming.AuthenticationException;
 import java.security.Key;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -29,48 +27,61 @@ public class JwtUtil {
 
     @Value("${application.security.jwt.secret-key}")
     private String secret_key;
+
     @Value("${application.security.jwt.expiration}")
     private long accessTokenValidity;
+
     private static Key key;
-    public JwtUtil(UserRepository clientRepository){
+
+    public JwtUtil(UserRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    public Key initializeKey(){
-        byte[] keyBytes;
-        keyBytes = Decoders.BASE64.decode(secret_key);
-        key = Keys.hmacShaKeyFor(keyBytes);
-        return key;
+    private Key initializeKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret_key);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
+
     public String createToken(UserEntity client) {
         key = initializeKey();
+
+        // Fetch user with authorities
         client = clientRepository.findByEmail(client.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("USER_NOT_FOUND"));
-        Claims claims = Jwts.claims().setSubject(client.getEmail());
-        Set<AuthorityEntity> authorities = client.getAuthorities();
+
+        Set<RoleEntity> authorities = client.getRoles();
         List<String> roles = new ArrayList<>();
-        for (AuthorityEntity authority : authorities) {
-            roles.add(authority.getName());
+
+        for (RoleEntity authority : authorities) {
+            roles.add(authority.getName());  // Keep roles as they are in DB
         }
+
+        // JWT Claims
         Map<String, Object> claimsMap = new HashMap<>();
-        claimsMap.put("authorities",roles);
+        claimsMap.put("authorities", roles);
         claimsMap.put("username", client.getEmail());
         claimsMap.put("user_id", client.getId());
 
+        // Token Expiration
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
-        final JwtBuilder jwtBuilder = Jwts.builder()
+
+        // Build JWT
+        return Jwts.builder()
                 .setSubject(client.getEmail())
-                .setIssuedAt(new Date())
+                .setIssuedAt(tokenCreateTime)
                 .setExpiration(tokenValidity)
                 .addClaims(claimsMap)
-                .signWith(key, SignatureAlgorithm.HS512);
-        log.info("Jwt token created for user: {}", client.getEmail());
-        return jwtBuilder.compact();
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
     }
 
     private Claims parseJwtClaims(String token) {
-        return Jwts.parser().setSigningKey(secret_key).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(initializeKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Claims resolveClaims(HttpServletRequest req) {
@@ -81,48 +92,40 @@ public class JwtUtil {
             }
             return null;
         } catch (ExpiredJwtException ex) {
-            log.error("Error due to: {}", ex.getMessage());
+            log.error("Token expired: {}", ex.getMessage());
             req.setAttribute("expired", ex.getMessage());
             throw ex;
         } catch (Exception ex) {
-            log.error("Error due to: {}", ex.getMessage());
+            log.error("Token invalid: {}", ex.getMessage());
             req.setAttribute("invalid", ex.getMessage());
             throw ex;
         }
     }
 
     public String resolveToken(HttpServletRequest request) {
-
-        String TOKEN_HEADER = "Authorization";
-        String bearerToken = request.getHeader(TOKEN_HEADER);
-        String TOKEN_PREFIX = "Bearer ";
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
         return null;
     }
 
-    public boolean validateClaims(Claims claims) throws AuthenticationException {
-        try {
-            return claims.getExpiration().after(new Date());
-        } catch (Exception e) {
-            throw e;
-        }
+    public boolean validateClaims(Claims claims) {
+        return claims.getExpiration().after(new Date());
     }
 
-    public Integer getUserId(Claims claims){
-        return (Integer) claims.get("user_id");
+    public Integer getUserId(Claims claims) {
+        return claims.get("user_id", Integer.class);
     }
 
     public Collection<GrantedAuthority> extractAuthorities(Claims claims) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         if (claims.containsKey("authorities")) {
-            List<String> roles = (List<String>) claims.get("authorities");
+            List<String> roles = claims.get("authorities", List.class);
             for (String role : roles) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                authorities.add(new SimpleGrantedAuthority(role)); // No "ROLE_" prefix
             }
         }
         return authorities;
     }
-
 }

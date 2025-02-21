@@ -28,6 +28,14 @@ public class HotelEntity {
     private int availableRooms; // Needs calculation or something else
     private boolean hasPool;
     private boolean hasGym;
+
+    private String mainImage;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PictureContentEntity> images;
+
+
+    @Column(name = "has_wifi")
     private boolean hasWiFi;
     private boolean hasRestaurant;
     private boolean hasParking;
@@ -49,6 +57,9 @@ public class HotelEntity {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomEntity> rooms;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviews;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationEntity> reservations;

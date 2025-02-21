@@ -1,6 +1,6 @@
 package com.project.hotel.service.impl;
 
-import com.project.hotel.entity.AuthorityEntity;
+import com.project.hotel.entity.RoleEntity;
 import com.project.hotel.entity.UserEntity;
 import com.project.hotel.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,8 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity client = clientRepository.findByEmail(email).orElseThrow();
         List<String> roles = new ArrayList<>();
-        Set<AuthorityEntity> authorities = client.getAuthorities();
-        for (AuthorityEntity authority : authorities) {
+        Set<RoleEntity> authorities = client.getRoles();
+        for (RoleEntity authority : authorities) {
             roles.add(authority.getName());
         }
         UserDetails userDetails;
