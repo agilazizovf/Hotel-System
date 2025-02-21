@@ -127,3 +127,9 @@ select 2,id from roles where employee=1;
 INSERT INTO user_roles (user_id, role_id)
 select 3,id from roles where customer=1;
 
+INSERT INTO pictures (image_path, hotel_id, room_id)
+VALUES ('uploads/pictures/example.jpg', 1, NULL),
+       ('uploads/pictures/room_example.jpg', NULL, 2),
+       ('uploads/pictures/hotel_room.jpg', 1, 2);
+
+

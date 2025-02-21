@@ -22,4 +22,8 @@ public class PictureContentEntity {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private HotelEntity hotel;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private RoomEntity room;
 }

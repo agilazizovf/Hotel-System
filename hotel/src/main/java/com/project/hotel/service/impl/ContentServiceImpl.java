@@ -2,9 +2,11 @@ package com.project.hotel.service.impl;
 
 import com.project.hotel.entity.HotelEntity;
 import com.project.hotel.entity.PictureContentEntity;
+import com.project.hotel.entity.RoomEntity;
 import com.project.hotel.exception.CustomException;
 import com.project.hotel.repository.HotelRepository;
 import com.project.hotel.repository.PictureContentRepository;
+import com.project.hotel.repository.RoomRepository;
 import com.project.hotel.service.ContentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class ContentServiceImpl implements ContentService {
 
     private final PictureContentRepository pictureContentRepository;
     private final HotelRepository hotelRepository;
+    private final RoomRepository roomRepository;
     @Override
     public String saveFile(MultipartFile file, String folder) throws IOException {
         // Define the base upload directory (this will be dynamically based on the folder parameter)
@@ -56,7 +59,7 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public void savePicture(MultipartFile file, Long hotelId) throws IOException {
+    public void saveHotelPicture(MultipartFile file, Long hotelId) throws IOException {
         HotelEntity hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
 
@@ -74,7 +77,7 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public void updatePicture(MultipartFile file, Long id, Long hotelId) throws IOException {
+    public void updateHotelPicture(MultipartFile file, Long id, Long hotelId) throws IOException {
         // Find the existing picture content by ID
         PictureContentEntity content = pictureContentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Picture content not found"));
@@ -99,6 +102,56 @@ public class ContentServiceImpl implements ContentService {
 
         // Save the new picture file and generate its path
         String filePath = saveFile(file, "hotels");
+
+        // Update the image path in the database
+        content.setImagePath(filePath);
+        pictureContentRepository.save(content);
+    }
+
+    @Override
+    public void saveRoomPicture(MultipartFile file, Long roomId) throws IOException {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+        // Save the file
+        String filePath = saveFile(file, "rooms");
+
+        // Create picture entity and associate it with the hotel
+        PictureContentEntity pictureContent = new PictureContentEntity();
+        pictureContent.setImagePath(filePath);
+
+        // Add to hotel's image list
+        room.getImages().add(pictureContent);
+        pictureContentRepository.save(pictureContent);
+        roomRepository.save(room);
+    }
+
+    @Override
+    public void updateRoomPicture(MultipartFile file, Long id, Long roomId) throws IOException {
+        // Find the existing picture content by ID
+        PictureContentEntity content = pictureContentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Picture content not found"));
+
+        // Check if the picture belongs to the given room
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+        if (!room.getImages().contains(content)) {
+            throw new CustomException("Invalid request", "Picture does not belong to the specified room", "Bad Request", 400, null);
+        }
+
+        // Delete the old picture if it exists
+        if (content.getImagePath() != null) {
+            Path oldFilePath = Paths.get(content.getImagePath());
+            try {
+                Files.deleteIfExists(oldFilePath);  // Delete the old file
+            } catch (IOException e) {
+                throw new IOException("Error deleting old picture file: " + e.getMessage());
+            }
+        }
+
+        // Save the new picture file and generate its path
+        String filePath = saveFile(file, "rooms");
 
         // Update the image path in the database
         content.setImagePath(filePath);

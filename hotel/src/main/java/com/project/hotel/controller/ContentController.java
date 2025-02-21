@@ -33,10 +33,10 @@ public class ContentController {
 
     @PostMapping("/savePicture/{hotelId}")
     @PreAuthorize("hasAuthority('SAVE_PICTURE')")
-    public ResponseEntity<String> savePicture(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<String> saveHotelPicture(@RequestParam("file") MultipartFile file,
                                               @PathVariable Long hotelId) {
         try {
-            contentService.savePicture(file, hotelId);
+            contentService.saveHotelPicture(file, hotelId);
             return ResponseEntity.ok("Picture uploaded and saved successfully.");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -46,12 +46,41 @@ public class ContentController {
 
     @PutMapping("/pictures/{id}/{hotelId}")
     @PreAuthorize("hasAuthority('UPDATE_PICTURE')")
-    public ResponseEntity<String> updatePicture(
+    public ResponseEntity<String> updateHotelPicture(
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file,
             @PathVariable Long hotelId) {
         try {
-            contentService.updatePicture(file, id, hotelId);
+            contentService.updateHotelPicture(file, id, hotelId);
+            return ResponseEntity.ok("Picture updated successfully.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Error updating picture: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/savePicture/{roomId}")
+    @PreAuthorize("hasAuthority('SAVE_PICTURE')")
+    public ResponseEntity<String> saveRoomPicture(@RequestParam("file") MultipartFile file,
+                                              @PathVariable Long roomId) {
+        try {
+            contentService.saveRoomPicture(file, roomId);
+            return ResponseEntity.ok("Picture uploaded and saved successfully.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error uploading picture: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/pictures/{id}/{roomId}")
+    @PreAuthorize("hasAuthority('UPDATE_PICTURE')")
+    public ResponseEntity<String> updateRoomPicture(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file,
+            @PathVariable Long roomId) {
+        try {
+            contentService.updateRoomPicture(file, id, roomId);
             return ResponseEntity.ok("Picture updated successfully.");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());

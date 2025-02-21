@@ -29,8 +29,6 @@ public class HotelEntity {
     private boolean hasPool;
     private boolean hasGym;
 
-    private String mainImage;
-
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PictureContentEntity> images;
 

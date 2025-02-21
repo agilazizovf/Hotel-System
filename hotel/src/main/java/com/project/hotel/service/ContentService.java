@@ -8,6 +8,9 @@ public interface ContentService {
 
     String saveFile(MultipartFile file, String folder)throws IOException;
 
-    void savePicture(MultipartFile file, Long hotelId) throws IOException;
-    void updatePicture(MultipartFile file, Long id, Long hotelId) throws IOException;
+    void saveHotelPicture(MultipartFile file, Long hotelId) throws IOException;
+    void updateHotelPicture(MultipartFile file, Long id, Long hotelId) throws IOException;
+
+    void saveRoomPicture(MultipartFile file, Long roomId) throws IOException;
+    void updateRoomPicture(MultipartFile file, Long id, Long roomId) throws IOException;
 }
