@@ -5,10 +5,9 @@ Hotel Reservation System:
 4) Reservation+
 5) Payment+
 6) Review+
-7) Notification
-8) Password Reset+
-9) Authorities+
-10) File Upload(hotel pictures, room pictures)
+7) Password Reset+
+8) Authorities+
+9) File Upload(hotel pictures, room pictures)+
 
 Functions:
 1) Admin register and login +
