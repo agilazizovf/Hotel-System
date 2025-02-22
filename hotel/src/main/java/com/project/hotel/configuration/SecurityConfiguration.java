@@ -93,6 +93,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/api/contents/save").hasAuthority("SAVE_FILE")
                                 .requestMatchers(HttpMethod.POST, "/api/contents/savePicture/{hotelId}").hasAuthority("SAVE_PICTURE")
                                 .requestMatchers(HttpMethod.PUT, "/api/contents/pictures/{id}/{hotelId}").hasAuthority("UPDATE_PICTURE")
+
+                                .requestMatchers(HttpMethod.POST, "/api/employees/register").hasAuthority("ADD_EMPLOYEE")
                                 //.requestMatchers(adminUrls).hasAnyAuthority("ROLE_ADMIN")
                                 //.requestMatchers(clientUrls).hasAnyAuthority("ROLE_CUSTOMER")
                                 .requestMatchers(anyAuthUrls).authenticated()
