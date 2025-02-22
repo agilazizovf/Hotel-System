@@ -1,5 +1,5 @@
 Hotel Reservation System:
-1) User -> Admin+, Customer, Employee
+1) User -> Admin+, Customer+, Employee
 2) Hotel+
 3) Room+
 4) Reservation+

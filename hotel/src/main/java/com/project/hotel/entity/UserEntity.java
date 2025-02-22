@@ -37,6 +37,10 @@ public class UserEntity {
     private CustomerEntity customer;
 
     @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private EmployeeEntity employee;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<HotelEntity> hotels;
 
